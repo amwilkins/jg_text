@@ -9,6 +9,8 @@ import os
 
 from bs4 import BeautifulSoup
 
+import clean
+
 URL = "https://jaypgreene.com/"
 page_url = "page/{}/"
 ARTICLE_LINKS = "outputs/article_links.json"
@@ -68,7 +70,7 @@ def parse_page(href):
             title = title_match.group(1)
         else:
             title = None
-        paragraphs = soup.find_all("p")
+        paragraphs = soup.find("div", {"class": "entry"}).find_all("p")[:-1]
         text_list = []
         for i in paragraphs:
             text_list.append(i.text)
@@ -100,10 +102,13 @@ def scrape_pages():
         n_links = len(article_links)
         count = 0
         for link in article_links:
-            article_info = parse_page(link["url"])
-            if article_info:
-                articles.append((article_info))
-            print(f"Article {count}/{n_links}")
+            try:
+                article_info = parse_page(link["url"])
+                if article_info:
+                    articles.append((article_info))
+                print(f"Article {count}/{n_links}")
+            except:
+                pass
             count = count + 1
         json.dump(articles, output_file, indent=4)
 
@@ -114,3 +119,4 @@ def scrape_pages():
 if __name__ == "__main__":
     scrape_main()
     scrape_pages()
+    clean.clean_articles(ARTICLES)

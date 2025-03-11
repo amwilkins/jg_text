@@ -7,6 +7,6 @@ Generally, the steps of this scrape are run interactively,
 however this script outlines the steps to run the entire scrape.
 '''
 
-python3 scrape.py
-python3 clean.py
-python3 analysis.py
+python3 scripts/scrape.py
+python3 scripts/clean.py
+python3 scripts/analysis.py
