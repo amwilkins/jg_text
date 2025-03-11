@@ -1,3 +1,4 @@
 *.json
 outputs/*
 __pycache__
+*.pkl
