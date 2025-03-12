@@ -2,6 +2,7 @@
 # Exploring articles
 # Plotting with plotnine
 
+import argparse
 import json
 import re
 
@@ -15,14 +16,10 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 CORPUS = "outputs/corpus.json"
 
-with open(CORPUS) as file:
-    articles = json.load(file)
-
-pst = PunktSentenceTokenizer()
-sid = SentimentIntensityAnalyzer()
-
 
 def create_features(article):
+    pst = PunktSentenceTokenizer()
+    sid = SentimentIntensityAnalyzer()
     # sentence count and length
     sentences = pst.tokenize(article["text"])
     article["n_sentences"] = len(sentences)
@@ -52,17 +49,20 @@ def create_features(article):
     return article
 
 
-data = []
-count = 0
-for article in articles:
-    count += 1
-    if count % 10 == 0:
-        print(f"Processed: {count}", end="\r")
-    data.append(create_features(article))
+def main():
+    with open(CORPUS) as file:
+        articles = json.load(file)
 
+    data = []
+    count = 0
+    for article in articles:
+        count += 1
+        if count % 10 == 0:
+            print(f"Processed: {count}", end="\r")
+        data.append(create_features(article))
 
-with open(CORPUS, "w") as output_file:
-    json.dump(data, output_file, indent=4)
+    with open(CORPUS, "w") as output_file:
+        json.dump(data, output_file, indent=4)
 
 
 # dates = []
@@ -86,3 +86,13 @@ with open(CORPUS, "w") as output_file:
 # )
 # plot.save("outputs/token_count_time.png")
 # plot.show()
+
+if __name__ == "__main":
+
+    parser = argparse.ArgumentParser(description="A script with a test flag.")
+    parser.add_argument("-t", "--test", action="store_true", help="Enable test mode")
+    args = parser.parse_args()
+
+    # if args.test:
+
+    main()

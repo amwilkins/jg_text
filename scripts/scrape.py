@@ -2,6 +2,7 @@
 # Scrape for text of articles
 # Creates article_links.json and articles.json
 
+import argparse
 import json
 import re
 import requests
@@ -10,6 +11,7 @@ import os
 from bs4 import BeautifulSoup
 
 import clean
+
 
 URL = "https://jaypgreene.com/"
 page_url = "page/{}/"
@@ -117,6 +119,21 @@ def scrape_pages():
 
 
 if __name__ == "__main__":
-    scrape_main()
-    scrape_pages()
-    clean.clean_articles(ARTICLES)
+
+    parser = argparse.ArgumentParser(description="A script with a test flag.")
+    parser.add_argument("-t", "--test", action="store_true", help="Enable test mode")
+    args = parser.parse_args()
+
+    if args.test:
+        r = requests.get(URL)
+        assert r.status_code == 200, "ERROR: Failed on website request"
+        print("Test Successful: website returns 200")
+        try:
+            soup = BeautifulSoup(r.content, "lxml")
+        except:
+            print("Failed to parse HTML")
+
+    else:
+        scrape_main()
+        scrape_pages()
+        clean.clean_articles(ARTICLES)

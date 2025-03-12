@@ -1,6 +1,7 @@
 # amw - 2025-02-17
 # Cleaning and tokenizing text
 
+import argparse
 import json
 import sys
 
@@ -65,4 +66,15 @@ def clean_articles(article_json):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="A script with a test flag.")
+    parser.add_argument("-t", "--test", action="store_true", help="Enable test mode")
+    args = parser.parse_args()
+
+    if args.test:
+        try:
+            with open(ARTICLES, "w") as file:
+                assert file
+        except:
+            print("FAILURE: Corpus not found")
+
     clean_articles(ARTICLES)
