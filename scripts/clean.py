@@ -68,13 +68,21 @@ def clean_articles(article_json):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="A script with a test flag.")
     parser.add_argument("-t", "--test", action="store_true", help="Enable test mode")
+    parser.add_argument("-f", "--file", type=str, help="Path to the input file")
     args = parser.parse_args()
+
+    if args.file:
+        FILE = args.file
+    else:
+        FILE = ARTICLES
 
     if args.test:
         try:
-            with open(ARTICLES, "w") as file:
-                assert file
+            with open(FILE, "r") as file:
+                data = json.load(file)
+                assert len(data) > 10
         except:
-            print("FAILURE: Corpus not found")
+            print(f"FAILURE: Issue with file: {FILE}")
 
-    clean_articles(ARTICLES)
+    else:
+        clean_articles(FILE)
